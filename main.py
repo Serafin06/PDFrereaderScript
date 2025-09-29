@@ -7,9 +7,9 @@ def main():
     """Główna funkcja uruchamiająca ekstrakcję"""
 
     # === KONFIGURACJA ===
-    PDF_FOLDER = "pdfs_input"  # Folder z plikami PDF
-    EXCEL_FILE = "parametry.xlsx"  # Opcjonalnie: plik Excel z dodatkowymi danymi
-    OUTPUT_FOLDER = "output"  # Folder na wyniki
+    PDF_FOLDER = "pdfInput"  # Folder z plikami PDF
+    EXCEL_FILE = "wyniki_szczegolowe.xlsx"  # Opcjonalnie: plik Excel z dodatkowymi danymi
+    OUTPUT_FOLDER = "spec"  # Folder na wyniki
 
     # Inicjalizacja ekstraktora
     extractor = PDFSpecificationExtractor(

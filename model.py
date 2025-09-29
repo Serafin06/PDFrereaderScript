@@ -5,6 +5,8 @@ from pathlib import Path
 from turtle import pd
 from typing import Optional, Dict, Any
 
+import pdfplumber
+
 from tempDataBase import ProductSpecification
 
 
