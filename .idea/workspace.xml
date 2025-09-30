@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 0.4">
-      <change afterPath="$PROJECT_DIR$/guiAutomator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/excelExtract.py" beforeDir="false" afterPath="$PROJECT_DIR$/excelExtract.py" afterDir="false" />
+    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 0.5">
+      <change beforePath="$PROJECT_DIR$/guiAutomator.py" beforeDir="false" afterPath="$PROJECT_DIR$/guiAutomator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/insertToCard.py" beforeDir="false" afterPath="$PROJECT_DIR$/insertToCard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interfaces.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,11 +46,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.guiAutomator.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "dart.analysis.tool.window.visible": "false",
     "git-widget-placeholder": "master",
     "last_opened_file_path": "C:/Users/RGrabowski/PycharmProjects/PDFrereaderScript",
+    "settings.editor.selected.configurable": "com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
@@ -114,7 +111,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759226604968</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="v. 0.5">
+      <option name="closed" value="true" />
+      <created>1759230966601</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1759230966601</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -123,6 +128,7 @@
     <MESSAGE value="v. 0.2" />
     <MESSAGE value="v. 0.3" />
     <MESSAGE value="v. 0.4" />
-    <option name="LAST_COMMIT_MESSAGE" value="v. 0.4" />
+    <MESSAGE value="v. 0.5" />
+    <option name="LAST_COMMIT_MESSAGE" value="v. 0.5" />
   </component>
 </project>
