@@ -1,45 +1,48 @@
 from pathlib import Path
 
-from model import PDFSpecificationExtractor
+
 
 
 def main():
-    """Główna funkcja uruchamiająca ekstrakcję"""
+    """Główna funkcja - import danych z PDF do bazy"""
 
     # === KONFIGURACJA ===
-    PDF_FOLDER = "pdfInput"  # Folder z plikami PDF
-    EXCEL_FILE = "wyniki_szczegolowe.xlsx"  # Opcjonalnie: plik Excel z dodatkowymi danymi
-    OUTPUT_FOLDER = "spec"  # Folder na wyniki
+    PDF_FOLDER = Path("pdfs_input")
+    EXCEL_FILE = Path("parametry.xlsx")  # Opcjonalnie
+    PREPARED_BY = "Twoje Imię Nazwisko"  # Zmień na swoje dane
 
-    # Inicjalizacja ekstraktora
-    extractor = PDFSpecificationExtractor(
-        pdf_folder=PDF_FOLDER,
-        excel_file=EXCEL_FILE if Path(EXCEL_FILE).exists() else None,
-        output_folder=OUTPUT_FOLDER
-    )
+    # Walidacja
+    if not PDF_FOLDER.exists():
+        print(f"❌ Folder {PDF_FOLDER} nie istnieje!")
+        PDF_FOLDER.mkdir(parents=True)
+        print(f"✓ Utworzono folder {PDF_FOLDER}")
+        print(f"  Wrzuć tam pliki PDF i uruchom ponownie")
+        return
 
-    # Przetwórz wszystkie PDF-y
-    print("=" * 60)
-    print("EKSTRAKCJA DANYCH Z PLIKÓW PDF")
-    print("=" * 60 + "\n")
+    # Tworzenie serwisu
+    excel_path = EXCEL_FILE if EXCEL_FILE.exists() else None
+    service = PDFImportServiceFactory.create(excel_path)
 
-    specifications = extractor.process_all_pdfs()
+    # Import
+    print("🚀 IMPORT DANYCH Z PDF DO BAZY")
+    print("=" * 70)
+    print("Uwaga: Zapisywane są TYLKO dane z PDF.")
+    print("Pozostałe pola uzupełni program GUI po wczytaniu.\n")
 
-    # Wyświetl wyniki
-    if not specifications.empty:
-        print("\n" + "=" * 60)
-        print(f"PODSUMOWANIE: Wyekstrahowano {len(specifications)} specyfikacji")
-        print("=" * 60)
+    stats = service.import_directory(PDF_FOLDER, PREPARED_BY)
 
-        # Zapisz wyniki
-        extractor.save_results(specifications, format="all")
-
-        # Wyświetl przykładowe dane
-        print("\n--- Przykładowe dane (pierwsze 3 kolumny) ---")
-        print(specifications[['card_no', 'article_index', 'client_article_index']].head())
-
-    else:
-        print("\n⚠ Nie udało się wyekstrahować żadnych danych")
+    # Podsumowanie
+    print("\n" + "=" * 70)
+    print("📊 PODSUMOWANIE")
+    print("=" * 70)
+    print(f"✓ Sukces: {stats['success']}")
+    print(f"✗ Błędy: {stats['failed']}")
+    print(f"\n💾 Dane zapisane w bazie danych SQLite")
+    print("\n📋 NASTĘPNE KROKI:")
+    print("1. Uruchom GUI swojego programu")
+    print("2. Wczytaj kartę po numerze (Card No)")
+    print("3. Program automatycznie uzupełni domyślne wartości")
+    print("4. Kliknij 'Generuj PDF'")
 
 
 if __name__ == "__main__":
