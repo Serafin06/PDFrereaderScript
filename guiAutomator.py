@@ -40,12 +40,20 @@ class MainWindowGUIAutomator(IGUIAutomator):
             self._set_property_value("Grubość", data.thickness)
 
         # === NADRUK ===
+        # Rodzaj nadruku - parsowanie na 3 pola (warstwa/typ/symetria)
         if data.print_type:
-            self.window.nadruk_frame.fields["Rodzaj nadruku"].insert(0, data.print_type)
+            self._parse_print_type(data.print_type)
+
+        # Ilość kolorów
         if data.number_of_colours:
-            self.window.nadruk_frame.fields["Ilość kolorów"].insert(0, data.number_of_colours)
+            self.window.nadruk_frame.ilosc_kolorow_spin.delete(0, 'end')
+            self.window.nadruk_frame.ilosc_kolorow_spin.insert(0, data.number_of_colours)
+
+        # Lakier
         if data.solid_lacquer:
-            self.window.nadruk_frame.fields["Lakier"].insert(0, data.solid_lacquer)
+            if "Lakier" in self.window.nadruk_frame.fields:
+                self.window.nadruk_frame.fields["Lakier"].delete(0, 'end')
+                self.window.nadruk_frame.fields["Lakier"].insert(0, data.solid_lacquer)
 
         # === PAKOWANIE ===
         if data.winding_code:
@@ -81,3 +89,34 @@ class MainWindowGUIAutomator(IGUIAutomator):
         self.window._generate_pdf()
         print("  ✓ PDF wygenerowany")
 
+    def _parse_print_type(self, print_type: str) -> None:
+        """
+        Parsuje rodzaj nadruku na 3 pola: warstwa, typ, symetria
+        Przykład: "sandwich printing/reverse/symmetrical"
+        """
+        try:
+            # Rozdziel po "/"
+            parts = [p.strip() for p in print_type.split('/')]
+
+            # Warstwa (sandwich printing / superficial)
+            if len(parts) > 0:
+                warstwa = parts[0]
+                if warstwa in ["sandwich printing", "superficial"]:
+                    self.window.nadruk_frame.warstwa_combo.set(warstwa)
+
+            # Typ (simple / reverse)
+            if len(parts) > 1:
+                typ = parts[1]
+                if typ in ["simple", "reverse"]:
+                    self.window.nadruk_frame.typ_combo.set(typ)
+
+            # Symetria (symmetrical / asymmetrical)
+            if len(parts) > 2:
+                symetria = parts[2]
+                if symetria in ["symmetrical", "asymmetrical"]:
+                    self.window.nadruk_frame.symetria_combo.set(symetria)
+
+            print(f"  ✓ Ustawiono rodzaj nadruku: {print_type}")
+
+        except Exception as e:
+            print(f"  ⚠ Nie udało się sparsować rodzaju nadruku: {e}")
