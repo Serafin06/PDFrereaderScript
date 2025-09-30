@@ -1,9 +1,11 @@
 
 from interface import IGUIAutomator
 from tempDataBase import PDFData
+from models import DOSTEPNE_OSOBY
 
 class MainWindowGUIAutomator(IGUIAutomator):
     """Automatyzacja GUI - wpisuje dane i generuje PDF"""
+
 
     def __init__(self, main_window):
         """
@@ -29,15 +31,39 @@ class MainWindowGUIAutomator(IGUIAutomator):
         self.window.artykul_frame.fields["Skład chemiczny"].insert(0, data.chemical_composition)
 
         # === WŁAŚCIWOŚCI FIZYKOCHEMICZNE ===
-        # Znajdujemy właściwości w tabeli i wpisujemy wartości
+        # Używamy nazw zgodnych z domyślną tabelą i dodajemy nowe jeśli potrzeba
         if data.gramatura:
-            self._set_property_value("Gramatura", data.gramatura)
+            self._add_or_update_property(
+                property_name="Weight",
+                value=data.gramatura,
+                method="PN-81/P 50129",
+                unit="g/m²",
+                deviation="-15 +15 %"
+            )
         if data.otr:
-            self._set_property_value("OTR (bariera O₂)", data.otr)
+            self._add_or_update_property(
+                property_name="OTR (barrier O₂)",
+                value=data.otr,
+                method="DIN 53380",
+                unit="cm³/m²×24h×0,1MPa",
+                deviation="-1 +2 cm³/m²×24h×0,1MPa"
+            )
         if data.wvtr:
-            self._set_property_value("WVTR (bariera H₂O)", data.wvtr)
+            self._add_or_update_property(
+                property_name="WVTR (barrier H₂O)",
+                value=data.wvtr,
+                method="DIN 53122",
+                unit="g/m²×24h",
+                deviation="-2 +3 g/m²×24h"
+            )
         if data.thickness:
-            self._set_property_value("Grubość", data.thickness)
+            self._add_or_update_property(
+                property_name="Thickness",
+                value=data.thickness,
+                method="PN-ISO 4593",
+                unit="μm",
+                deviation="-10 +10 %"
+            )
 
         # === NADRUK ===
         # Rodzaj nadruku - parsowanie na 3 pola (warstwa/typ/symetria)
@@ -67,22 +93,35 @@ class MainWindowGUIAutomator(IGUIAutomator):
 
         # === PODPISY ===
         if data.prepared_by:
-            self.window.podpisy_frame.fields["opracowal"].delete(0, 'end')
-            self.window.podpisy_frame.fields["opracowal"].insert(0, data.prepared_by)
-
-        print("  ✓ Dane wpisane do formularza")
+            combo = self.window.podpisy_frame.opracowal_combo
+            combo.set(data.prepared_by)
 
     def _set_property_value(self, property_name: str, value: str) -> None:
-        """Wpisuje wartość właściwości w tabeli"""
+        """Wpisuje wartość właściwości bezpośrednio w Treeview"""
         try:
-            # Znajdujemy właściwość w tabeli i wpisujemy wartość
-            properties = self.window.wlasciwosci_table.get_properties()
-            for prop in properties:
-                if prop.nazwa == property_name:
-                    prop.wartosc = value
-            self.window.wlasciwosci_table.set_properties(properties)
+            # Bezpośredni dostęp do Treeview
+            for item in self.window.wlasciwosci_table.tree.get_children():
+                values = self.window.wlasciwosci_table.tree.item(item, 'values')
+
+                # values[0] = Lp.
+                # values[1] = Parametr (nazwa właściwości)
+                # values[2] = Metoda badania
+                # values[3] = Wartość ← tutaj wpisujemy
+                # values[4] = Jednostka
+                # values[5] = Odchylenie
+
+                if len(values) >= 6 and str(values[1]) == property_name:
+                    # Zaktualizuj tylko wartość (indeks 3)
+                    new_values = list(values)
+                    new_values[3] = value
+                    self.window.wlasciwosci_table.tree.item(item, values=new_values)
+                    print(f"  ✓ Ustawiono {property_name} = {value}")
+                    return
+
+            print(f"  ⚠ Nie znaleziono właściwości: {property_name}")
+
         except Exception as e:
-            print(f"  ⚠ Nie udało się ustawić {property_name}: {e}")
+            print(f"  ⚠ Błąd przy ustawianiu {property_name}: {e}")
 
     def generate_pdf(self) -> None:
         """Generuje PDF klikając przycisk w GUI"""
@@ -120,3 +159,50 @@ class MainWindowGUIAutomator(IGUIAutomator):
 
         except Exception as e:
             print(f"  ⚠ Nie udało się sparsować rodzaju nadruku: {e}")
+
+    def _map_property_name(self, pdf_name: str) -> str:
+        """Mapuje nazwy z PDF na nazwy w tabeli"""
+        mapping = {
+            "Gramatura": "Weight",
+            "OTR (bariera O₂)": "OTR (barrier O₂)",
+            "WVTR (bariera H₂O)": "WVTR (barrier H₂O)",
+            "Grubość": "Thickness"  # Jeśli w tabeli jest "Thickness"
+        }
+        return mapping.get(pdf_name, pdf_name)
+
+    def _add_or_update_property(self, property_name: str, value: str, method: str = "-", unit: str = "μm",
+                                deviation: str = "- -") -> None:
+        """
+        Dodaje właściwość do tabeli lub aktualizuje jeśli istnieje
+
+        Args:
+            property_name: Nazwa parametru
+            value: Wartość
+            method: Metoda badania
+            unit: Jednostka
+            deviation: Odchylenie
+        """
+        try:
+            # Najpierw sprawdź czy właściwość już istnieje
+            found = False
+            for item in self.window.wlasciwosci_table.tree.get_children():
+                values = self.window.wlasciwosci_table.tree.item(item, 'values')
+
+                if len(values) >= 6 and str(values[1]) == property_name:
+                    # Zaktualizuj istniejącą właściwość
+                    new_values = list(values)
+                    new_values[3] = value  # Wartość
+                    self.window.wlasciwosci_table.tree.item(item, values=new_values)
+                    print(f"  ✓ Zaktualizowano {property_name} = {value}")
+                    found = True
+                    break
+
+            # Jeśli nie znaleziono, dodaj nową właściwość
+            if not found:
+                lp = len(self.window.wlasciwosci_table.tree.get_children()) + 1
+                new_values = [str(lp), property_name, method, value, unit, deviation]
+                self.window.wlasciwosci_table.tree.insert("", "end", values=new_values)
+                print(f"  ✓ Dodano {property_name} = {value}")
+
+        except Exception as e:
+            print(f"  ⚠ Błąd przy dodawaniu/aktualizacji {property_name}: {e}")

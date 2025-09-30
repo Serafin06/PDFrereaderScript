@@ -1,4 +1,11 @@
+import tkinter as tk
+from tkinter import filedialog, simpledialog
+from pathlib import Path
+
+
 from model import PDFtoGUIServiceFactory
+from models import DOSTEPNE_OSOBY
+
 
 # ============================================================================
 # INTEGRACJA Z TWOIM PROGRAMEM
@@ -22,9 +29,7 @@ def integrateWithGUI(main_window):
 
         root.mainloop()
     """
-    import tkinter as tk
-    from tkinter import filedialog, simpledialog
-    from pathlib import Path
+
 
     def import_from_pdf():
         """Handler dla przycisku Import z PDF"""
@@ -34,13 +39,16 @@ def integrateWithGUI(main_window):
             return
 
         # Pytanie o nazwisko
-        prepared_by = simpledialog.askstring(
-            "Import z PDF",
-            "Podaj imię i nazwisko osoby przygotowującej:",
-            initialvalue="Twoje Imię Nazwisko"
-        )
-        if not prepared_by:
-            return
+        root = tk.Tk()
+        root.withdraw()
+
+        dialog = ListaOsobDialog(root, title="Import z PDF")
+        prepared_by = dialog.result
+
+        if prepared_by:
+            print("Wybrano:", prepared_by)
+        else:
+            print("Nie wybrano osoby")
 
         # Opcjonalnie: Excel
         excel_path = None
@@ -83,3 +91,16 @@ def integrateWithGUI(main_window):
     import_button.pack(side="left", padx=5)
 
     print("✓ Dodano funkcję 'Import z PDF' do GUI")
+
+class ListaOsobDialog(simpledialog.Dialog):
+    def body(self, master):
+        tk.Label(master, text="Wybierz osobę przygotowującą:").pack()
+
+        self.var = tk.StringVar(value=DOSTEPNE_OSOBY[0])
+        self.menu = tk.OptionMenu(master, self.var, *DOSTEPNE_OSOBY)
+        self.menu.pack(padx=10, pady=10)
+        self.menu.config(width=25)
+        return self.menu
+
+    def apply(self):
+        self.result = self.var.get()
