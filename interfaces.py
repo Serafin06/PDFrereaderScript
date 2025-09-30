@@ -1,37 +1,40 @@
 from abc import abstractmethod, ABC
+from pathlib import Path
+
+from tempDataBase import PDFData
 
 
 class ITextExtractor(ABC):
-    """Interface dla ekstraktorów tekstu"""
+    """Interface dla ekstrakcji tekstu"""
 
     @abstractmethod
     def extract_text(self, file_path: Path) -> str:
-        """Wyciąga tekst z pliku"""
         pass
 
 
 class IDataParser(ABC):
-    """Interface dla parserów danych"""
+    """Interface dla parsowania danych"""
 
     @abstractmethod
-    def parse(self, text: str, file_name: str) -> ExtractedPDFData:
-        """Parsuje tekst do struktury danych"""
+    def parse(self, text: str) -> PDFData:
         pass
 
 
 class IDataEnricher(ABC):
-    """Interface dla wzbogacania danych"""
+    """Interface dla wzbogacania danych z Excel"""
 
     @abstractmethod
-    def enrich(self, data: ExtractedPDFData) -> ExtractedPDFData:
-        """Wzbogaca dane z zewnętrznych źródeł (Excel)"""
+    def enrich(self, data: PDFData, filename: str) -> PDFData:
         pass
 
 
-class IModelMapper(ABC):
-    """Interface dla mapowania DTO na modele domenowe"""
+class IGUIAutomator(ABC):
+    """Interface dla automatyzacji GUI"""
 
     @abstractmethod
-    def map_to_karta(self, data: ExtractedPDFData) -> KartaWyrobu:
-        """Mapuje ExtractedPDFData na KartaWyrobu - TYLKO z danymi z PDF"""
+    def fill_form(self, data: PDFData) -> None:
+        pass
+
+    @abstractmethod
+    def generate_pdf(self) -> None:
         pass

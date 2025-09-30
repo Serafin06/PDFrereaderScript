@@ -1,105 +1,166 @@
+from interfaces import IGUIAutomator
+from tempDataBase import PDFData
 
-class MinimalKartaMapper(IModelMapper):
-    """
-    Single Responsibility: Mapowanie TYLKO danych z PDF na model KartaWyrobu
-    Pozostałe pola pozostają puste - zostaną uzupełnione w GUI
-    """
 
-    def map_to_karta(self, data: ExtractedPDFData) -> KartaWyrobu:
-        """Mapuje TYLKO wyekstrahowane dane z PDF"""
+class MainWindowGUIAutomator(IGUIAutomator):
+    """Automatyzacja GUI - wpisuje dane i generuje PDF"""
 
-        # Minimalne dane - tylko producent (pusty, GUI uzupełni)
-        producent = Producent(nazwa="", adres="")
+    def __init__(self, main_window):
+        """
+        Args:
+            main_window: Instancja MainWindow z Twojego programu
+        """
+        self.window = main_window
 
-        # Artykuł - TYLKO dane z PDF
-        artykul = Artykul(
-            nr_karty=data.card_no,
-            data=datetime.now().strftime("%Y-%m-%d"),
-            indeks=data.article_index,
-            klienta=data.client_article_index,
-            nazwa=data.article_description,
-            struktura=data.product_structure,
-            opis_struktury=data.structure_description,
-            sklad_chemiczny=data.chemical_composition,
-            grubosc_struktury=data.structure_thickness,
-            specyfikacja_klienta=""  # Puste - GUI uzupełni
-        )
+    def fill_form(self, data: PDFData) -> None:
+        """Wpisuje dane do formularza GUI"""
 
-        # Właściwości - TYLKO te z PDF
-        wlasciwosci = []
+        # Najpierw czyścimy formularz (nowa karta)
+        self.window._new_karta()
+
+        # === ARTYKUŁ ===
+        self.window.artykul_frame.fields["Nr karty"].insert(0, data.card_no)
+        self.window.artykul_frame.fields["Artykuł indeks"].insert(0, data.article_index)
+        self.window.artykul_frame.fields["Artykuł klienta"].insert(0, data.client_article_index)
+        self.window.artykul_frame.fields["Artykuł nazwa"].insert(0, data.article_description)
+        self.window.artykul_frame.fields["Artykuł struktura"].insert(0, data.product_structure)
+        self.window.artykul_frame.fields["Grubość struktury"].insert(0, data.structure_thickness)
+        self.window.artykul_frame.fields["Opis struktury"].insert(0, data.structure_description)
+        self.window.artykul_frame.fields["Skład chemiczny"].insert(0, data.chemical_composition)
+
+        # === WŁAŚCIWOŚCI FIZYKOCHEMICZNE ===
+        # Znajdujemy właściwości w tabeli i wpisujemy wartości
         if data.gramatura:
-            wlasciwosci.append(WlasciwosciFizyczne(
-                nazwa="Gramatura",
-                metoda="PN-81/P 50129",
-                wartosc=data.gramatura,
-                jednostka="g/m²"
-            ))
-
+            self._set_property_value("Gramatura", data.gramatura)
         if data.otr:
-            wlasciwosci.append(WlasciwosciFizyczne(
-                nazwa="OTR (bariera O₂)",
-                metoda="DIN 53380",
-                wartosc=data.otr,
-                jednostka="cm³/m²/24h"
-            ))
-
+            self._set_property_value("OTR (bariera O₂)", data.otr)
         if data.wvtr:
-            wlasciwosci.append(WlasciwosciFizyczne(
-                nazwa="WVTR (bariera H₂O)",
-                metoda="DIN 53122",
-                wartosc=data.wvtr,
-                jednostka="g/m²/24h"
-            ))
-
+            self._set_property_value("WVTR (bariera H₂O)", data.wvtr)
         if data.thickness:
-            wlasciwosci.append(WlasciwosciFizyczne(
-                nazwa="Grubość",
-                metoda="PN-ISO 4593",
-                wartosc=data.thickness,
-                jednostka="μm"
-            ))
+            self._set_property_value("Grubość", data.thickness)
 
-        # Nadruk - TYLKO dane z PDF, reszta pusta
-        nadruk = Nadruk(
-            rodzaj=data.print_type,
-            ilosc_kolorow=data.number_of_colours,
-            przyczepnosc="",  # Puste - GUI uzupełni domyślną wartością
-            kolorystyka="",   # Puste - GUI uzupełni domyślną wartością
-            lakier=data.solid_lacquer
+        # === NADRUK ===
+        if data.print_type:
+            self.window.nadruk_frame.fields["Rodzaj nadruku"].insert(0, data.print_type)
+        if data.number_of_colours:
+            self.window.nadruk_frame.fields["Ilość kolorów"].insert(0, data.number_of_colours)
+        if data.solid_lacquer:
+            self.window.nadruk_frame.fields["Lakier"].insert(0, data.solid_lacquer)
+
+        # === PAKOWANIE ===
+        if data.winding_code:
+            self.window.pakowanie_frame.fields["Kod nawoju"].insert(0, data.winding_code)
+        if data.external_diameter:
+            self.window.pakowanie_frame.fields["Średnica nawoju"].insert(0, data.external_diameter)
+        if data.width_of_core:
+            self.window.pakowanie_frame.fields["Szerokość tulei"].insert(0, data.width_of_core)
+        if data.core_submission:
+            self.window.pakowanie_frame.fields["Wysunięcie tulei"].insert(0, data.core_submission)
+
+        # === PODPISY ===
+        if data.prepared_by:
+            self.window.podpisy_frame.fields["opracowal"].delete(0, 'end')
+            self.window.podpisy_frame.fields["opracowal"].insert(0, data.prepared_by)
+
+        print("  ✓ Dane wpisane do formularza")
+
+    def _set_property_value(self, property_name: str, value: str) -> None:
+        """Wpisuje wartość właściwości w tabeli"""
+        try:
+            # Znajdujemy właściwość w tabeli i wpisujemy wartość
+            properties = self.window.wlasciwosci_table.get_properties()
+            for prop in properties:
+                if prop.nazwa == property_name:
+                    prop.wartosc = value
+            self.window.wlasciwosci_table.set_properties(properties)
+        except Exception as e:
+            print(f"  ⚠ Nie udało się ustawić {property_name}: {e}")
+
+    def generate_pdf(self) -> None:
+        """Generuje PDF klikając przycisk w GUI"""
+        self.window._generate_pdf()
+        print("  ✓ PDF wygenerowany")
+
+# ============================================================================
+# INTEGRACJA Z TWOIM PROGRAMEM
+# ============================================================================
+
+
+def integrate_with_gui(main_window):
+    """
+    Funkcja do integracji z Twoim programem.
+    Wywołaj ją po stworzeniu MainWindow.
+
+    Użycie w Twoim main.py:
+        from main_window import MainWindow
+        from pdf_extractor import integrate_with_gui
+
+        root = tk.Tk()
+        app = MainWindow(root)
+
+        # Dodaj przycisk "Import z PDF"
+        integrate_with_gui(app)
+
+        root.mainloop()
+    """
+    import tkinter as tk
+    from tkinter import filedialog, simpledialog
+    from pathlib import Path
+
+    def import_from_pdf():
+        """Handler dla przycisku Import z PDF"""
+        # Wybór folderu z PDF-ami
+        pdf_folder = filedialog.askdirectory(title="Wybierz folder z plikami PDF")
+        if not pdf_folder:
+            return
+
+        # Pytanie o nazwisko
+        prepared_by = simpledialog.askstring(
+            "Import z PDF",
+            "Podaj imię i nazwisko osoby przygotowującej:",
+            initialvalue="Twoje Imię Nazwisko"
+        )
+        if not prepared_by:
+            return
+
+        # Opcjonalnie: Excel
+        excel_path = None
+        use_excel = tk.messagebox.askyesno(
+            "Import z PDF",
+            "Czy chcesz użyć pliku Excel z dodatkowymi danymi?"
+        )
+        if use_excel:
+            excel_file = filedialog.askopenfilename(
+                title="Wybierz plik Excel",
+                filetypes=[("Excel", "*.xlsx *.xls")]
+            )
+            if excel_file:
+                excel_path = Path(excel_file)
+
+        # Tworzenie serwisu i przetwarzanie
+        service = PDFtoGUIServiceFactory.create(main_window, excel_path)
+        stats = service.process_directory(Path(pdf_folder), prepared_by)
+
+        # Podsumowanie
+        tk.messagebox.showinfo(
+            "Import zakończony",
+            f"Przetworzono pliki PDF:\n\n"
+            f"✓ Sukces: {stats['success']}\n"
+            f"✗ Błędy: {stats['failed']}\n\n"
+            f"PDF-y zostały wygenerowane!"
         )
 
-        # Pakowanie - TYLKO dane z PDF, reszta pusta
-        pakowanie = Pakowanie(
-            kod_nawoju=data.winding_code,
-            waga_nawoju="",  # Puste - GUI uzupełni
-            srednica_nawoju=data.external_diameter,
-            rolek_paleta="",  # Puste - GUI uzupełni
-            tuleja_wewnetrzna="",  # Puste - GUI uzupełni
-            szerokosc_tulei=data.width_of_core,
-            wysuniecie_tulei=data.core_submission,
-            typ_palety="",  # Puste - GUI uzupełni
-            identyfikacja="",  # Puste - GUI uzupełni domyślnym tekstem
-            przechowywanie="",  # Puste - GUI uzupełni domyślnym tekstem
-            okres_przydatnosci=""  # Puste - GUI uzupełni domyślną wartością
-        )
+    # Dodaj przycisk "Import z PDF" do GUI
+    import_button = tk.Button(
+        main_window.root,
+        text="📥 Import z PDF",
+        command=import_from_pdf,
+        font=("Arial", 10, "bold"),
+        bg="#4CAF50",
+        fg="white",
+        padx=20,
+        pady=10
+    )
+    import_button.pack(side="left", padx=5)
 
-        # Zastosowanie - puste, GUI uzupełni domyślnymi wartościami
-        zastosowanie = Zastosowanie(opis="", dopuszczenie="")
-
-        # Podpisy - tylko przygotował
-        podpisy = PodpisyDokumentu(
-            opracowal=data.prepared_by,
-            zatwierdził="",
-            data_opracowania=datetime.now().strftime("%Y-%m-%d"),
-            data_zatwierdzenia=""
-        )
-
-        return KartaWyrobu(
-            producent=producent,
-            artykul=artykul,
-            wlasciwosci=wlasciwosci,
-            nadruk=nadruk,
-            pakowanie=pakowanie,
-            zastosowanie=zastosowanie,
-            podpisy=podpisy
-        )
+    print("✓ Dodano funkcję 'Import z PDF' do GUI")
