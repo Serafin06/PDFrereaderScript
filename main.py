@@ -3,8 +3,9 @@ from pathlib import Path
 
 
 
+"""
 def main():
-    """Główna funkcja - import danych z PDF do bazy"""
+    #Główna funkcja - import danych z PDF do bazy
 
     # === KONFIGURACJA ===
     PDF_FOLDER = Path("pdfs_input")
@@ -43,7 +44,8 @@ def main():
     print("2. Wczytaj kartę po numerze (Card No)")
     print("3. Program automatycznie uzupełni domyślne wartości")
     print("4. Kliknij 'Generuj PDF'")
-
+"""
 
 if __name__ == "__main__":
-    main()
+    print("Ten skrypt wymaga integracji z GUI.")
+    print("Użyj: integrate_with_gui(main_window)")

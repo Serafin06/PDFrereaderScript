@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Optional
 
-from interfaces import IDataEnricher
+from interface import IDataEnricher
 from tempDataBase import PDFData
 
 

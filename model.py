@@ -1,13 +1,11 @@
-import re
 from pathlib import Path
 from typing import Optional, Dict
-
-import pdfplumber
+import re, pdfplumber
 
 from excelExtract import ExcelDataEnricher
-from insertToCard import MinimalKartaMapper, MainWindowGUIAutomator
-from interfaces import ITextExtractor, IDataParser, IDataEnricher, IGUIAutomator
-from tempDataBase import ExtractedPDFData
+from guiAutomator import MainWindowGUIAutomator
+from interface import ITextExtractor, IDataParser, IDataEnricher, IGUIAutomator
+from tempDataBase import PDFData
 
 
 class PDFTextExtractor(ITextExtractor):
