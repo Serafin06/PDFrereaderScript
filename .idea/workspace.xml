@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 0.5">
+    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 1.0">
+      <change beforePath="$PROJECT_DIR$/../KartaWyrobu/gui/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/../KartaWyrobu/gui/main_window.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/guiAutomator.py" beforeDir="false" afterPath="$PROJECT_DIR$/guiAutomator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/insertToCard.py" beforeDir="false" afterPath="$PROJECT_DIR$/insertToCard.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,19 +46,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.guiAutomator.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/RGrabowski/PycharmProjects/PDFrereaderScript",
-    "settings.editor.selected.configurable": "com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.guiAutomator.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/RGrabowski/PycharmProjects/PDFrereaderScript&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -119,7 +123,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759230966601</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="v. 1.0">
+      <option name="closed" value="true" />
+      <created>1759235357538</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1759235357538</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -129,6 +141,7 @@
     <MESSAGE value="v. 0.3" />
     <MESSAGE value="v. 0.4" />
     <MESSAGE value="v. 0.5" />
-    <option name="LAST_COMMIT_MESSAGE" value="v. 0.5" />
+    <MESSAGE value="v. 1.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="v. 1.0" />
   </component>
 </project>

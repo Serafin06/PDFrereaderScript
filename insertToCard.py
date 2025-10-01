@@ -38,6 +38,11 @@ def integrateWithGUI(main_window):
         if not pdf_folder:
             return
 
+        # Wybór folderu docelowego dla wygenerowanych PDF-ów - wystarczy zmienic lokalizacje i Win juz sam bedzie tu zapisywal
+        output_folder = filedialog.askdirectory(title="Wybierz folder do zapisu wygenerowanych PDF")
+        if not output_folder:
+            return
+
         # Pytanie o nazwisko
         root = tk.Tk()
         root.withdraw()
@@ -49,6 +54,8 @@ def integrateWithGUI(main_window):
             print("Wybrano:", prepared_by)
         else:
             print("Nie wybrano osoby")
+
+        root.destroy()
 
         # Opcjonalnie: Excel
         excel_path = None
@@ -66,7 +73,7 @@ def integrateWithGUI(main_window):
 
         # Tworzenie serwisu i przetwarzanie
         service = PDFtoGUIServiceFactory.create(main_window, excel_path)
-        stats = service.process_directory(Path(pdf_folder), prepared_by)
+        stats = service.process_directory(Path(pdf_folder), prepared_by, output_folder)
 
         # Podsumowanie
         tk.messagebox.showinfo(
@@ -104,3 +111,5 @@ class ListaOsobDialog(simpledialog.Dialog):
 
     def apply(self):
         self.result = self.var.get()
+
+

@@ -1,7 +1,11 @@
+import time
+from pathlib import Path
+
+import pyautogui
 
 from interface import IGUIAutomator
 from tempDataBase import PDFData
-from models import DOSTEPNE_OSOBY
+
 
 class MainWindowGUIAutomator(IGUIAutomator):
     """Automatyzacja GUI - wpisuje dane i generuje PDF"""
@@ -123,10 +127,23 @@ class MainWindowGUIAutomator(IGUIAutomator):
         except Exception as e:
             print(f"  ⚠ Błąd przy ustawianiu {property_name}: {e}")
 
-    def generate_pdf(self) -> None:
-        """Generuje PDF klikając przycisk w GUI"""
-        self.window._generate_pdf()
+    def generate_pdf(self, output_folder: Path) -> None:
+        """Generuje PDF klikając przycisk w GUI i automatycznie zatwierdza okna systemowe"""
+        self.window._generate_pdf()  # kliknięcie "Generuj PDF"
+
+        time.sleep(0.8)
+
+        pyautogui.press("enter")
+
+        # Odczekaj chwilę na wygenerowanie PDF i popup z informacją
+        time.sleep(0.8)
+
+        # Kliknij OK w popupie z informacją o wygenerowanym PDF
+        pyautogui.press("enter")
+
         print("  ✓ PDF wygenerowany")
+
+
 
     def _parse_print_type(self, print_type: str) -> None:
         """
@@ -206,3 +223,20 @@ class MainWindowGUIAutomator(IGUIAutomator):
 
         except Exception as e:
             print(f"  ⚠ Błąd przy dodawaniu/aktualizacji {property_name}: {e}")
+
+def set_output_folder(output_folder: Path):
+    """Automatycznie ustawia folder w systemowym oknie zapisu pliku PDF"""
+    # Odczekaj chwilę, aż pojawi się okno dialogowe
+    time.sleep(0.75)
+
+    # Wpisz ścieżkę folderu (tylko folder, nazwa pliku zostaje domyślna)
+    pyautogui.typewrite(str(output_folder))
+    pyautogui.press("enter")
+
+    # Odczekaj chwilę na wygenerowanie PDF i popup z informacją
+    time.sleep(0.5)
+
+    # Kliknij OK w popupie z informacją o wygenerowanym PDF
+    pyautogui.press("enter")
+
+    print(f"  ✓ PDF zapisany w: {output_folder}")
