@@ -55,7 +55,7 @@ def integrateWithGUI(main_window):
         else:
             print("Nie wybrano osoby")
 
-        root.destroy()
+
 
         # Opcjonalnie: Excel
         excel_path = None
@@ -73,7 +73,7 @@ def integrateWithGUI(main_window):
 
         # Tworzenie serwisu i przetwarzanie
         service = PDFtoGUIServiceFactory.create(main_window, excel_path)
-        stats = service.process_directory(Path(pdf_folder), prepared_by, output_folder)
+        stats = service.process_directory(Path(pdf_folder), prepared_by)
 
         # Podsumowanie
         tk.messagebox.showinfo(
@@ -83,6 +83,7 @@ def integrateWithGUI(main_window):
             f"✗ Błędy: {stats['failed']}\n\n"
             f"PDF-y zostały wygenerowane!"
         )
+        root.destroy()
 
     # Dodaj przycisk "Import z PDF" do GUI
     import_button = tk.Button(

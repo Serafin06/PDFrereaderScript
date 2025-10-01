@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 1.0">
-      <change beforePath="$PROJECT_DIR$/../KartaWyrobu/gui/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/../KartaWyrobu/gui/main_window.py" afterDir="false" />
+    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 2.0">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/guiAutomator.py" beforeDir="false" afterPath="$PROJECT_DIR$/guiAutomator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/insertToCard.py" beforeDir="false" afterPath="$PROJECT_DIR$/insertToCard.py" afterDir="false" />
@@ -131,7 +130,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759235357538</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="v. 2.0">
+      <option name="closed" value="true" />
+      <created>1759316017434</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1759316017434</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -142,6 +149,7 @@
     <MESSAGE value="v. 0.4" />
     <MESSAGE value="v. 0.5" />
     <MESSAGE value="v. 1.0" />
-    <option name="LAST_COMMIT_MESSAGE" value="v. 1.0" />
+    <MESSAGE value="v. 2.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="v. 2.0" />
   </component>
 </project>

@@ -88,7 +88,7 @@ class PDFtoGUIService:
         self.data_enricher = data_enricher
         self.gui_automator = gui_automator
 
-    def process_pdf(self, pdf_path: Path, prepared_by: str, output_folder: Path) -> bool:
+    def process_pdf(self, pdf_path: Path, prepared_by: str) -> bool:
         """
         Przetwarza PDF: wyciąga dane → wpisuje do GUI → generuje PDF
 
@@ -116,7 +116,7 @@ class PDFtoGUIService:
             self.gui_automator.fill_form(data)
 
             # 5. Generowanie PDF
-            self.gui_automator.generate_pdf(output_folder)
+            self.gui_automator.generate_pdf()
 
             print(f"{'=' * 70}\n")
             return True
@@ -127,7 +127,7 @@ class PDFtoGUIService:
             traceback.print_exc()
             return False
 
-    def process_directory(self, directory: Path, prepared_by: str, output_folder: Path) -> Dict[str, int]:
+    def process_directory(self, directory: Path, prepared_by: str) -> Dict[str, int]:
         """Przetwarza wszystkie PDF-y z katalogu"""
         pdf_files = list(directory.glob("*.pdf"))
 
@@ -140,7 +140,7 @@ class PDFtoGUIService:
         stats = {'success': 0, 'failed': 0}
 
         for pdf_file in pdf_files:
-            if self.process_pdf(pdf_file, prepared_by, output_folder):
+            if self.process_pdf(pdf_file, prepared_by):
                 stats['success'] += 1
             else:
                 stats['failed'] += 1
