@@ -80,14 +80,20 @@ class MainWindowGUIAutomator(IGUIAutomator):
             self.window.nadruk_frame.ilosc_kolorow_spin.insert(0, data.number_of_colours)
 
         # Lakier
-        if data.solid_lacquer:
-            if "Lakier" in self.window.nadruk_frame.fields:
-                self.window.nadruk_frame.fields["Lakier"].delete(0, 'end')
-                self.window.nadruk_frame.fields["Lakier"].insert(0, data.solid_lacquer)
+        value_to_insert = data.solid_lacquer
+        if not value_to_insert or value_to_insert.strip().lower() == "brak":
+            value_to_insert = "-"
+
+        if "Lakier" in self.window.nadruk_frame.fields:
+            field = self.window.nadruk_frame.fields["Lakier"]
+            field.delete(0, 'end')
+            field.insert(0, value_to_insert)
 
         # === PAKOWANIE ===
         if data.winding_code:
             self.window.pakowanie_frame.fields["Kod nawoju"].insert(0, data.winding_code)
+        if data.core:
+            self.window.pakowanie_frame.fields["Tuleja wewnętrzna"].insert(0, data.core)
         if data.external_diameter:
             self.window.pakowanie_frame.fields["Średnica nawoju"].insert(0, data.external_diameter)
         if data.width_of_core:
@@ -129,12 +135,12 @@ class MainWindowGUIAutomator(IGUIAutomator):
 
     def generate_pdf(self) -> None:
         """Generuje PDF klikając przycisk w GUI i automatycznie zatwierdza okna systemowe"""
-        self.window._generate_pdf()  # kliknięcie "Generuj PDF"
-
         if self.countPDF == 0:
             time.sleep(3)
-        else:
-            time.sleep(0.8)
+
+        self.window._generate_pdf()  # kliknięcie "Generuj PDF"
+
+        time.sleep(0.8)
 
         pyautogui.press("enter")
 
@@ -143,11 +149,8 @@ class MainWindowGUIAutomator(IGUIAutomator):
 
         # Kliknij OK w popupie z informacją o wygenerowanym PDF
         pyautogui.press("enter")
-
         print("  ✓ PDF wygenerowany")
         self.countPDF += 1
-
-
 
     def _parse_print_type(self, print_type: str) -> None:
         """
@@ -227,15 +230,3 @@ class MainWindowGUIAutomator(IGUIAutomator):
 
         except Exception as e:
             print(f"  ⚠ Błąd przy dodawaniu/aktualizacji {property_name}: {e}")
-
-
-
-def waitForWindow(title: str, timeout: int = 10):
-    """Czeka aż pojawi się okno z danym tytułem"""
-    start = time.time()
-    while time.time() - start < timeout:
-        win = pyautogui.getWindowsWithTitle(title)
-        if win:
-            return win[0]
-        time.sleep(0.2)
-    return None

@@ -27,6 +27,7 @@ class PDFData:
 
     # Packing
     winding_code: str = ""
+    core: str = ""
     external_diameter: str = ""
     width_of_core: str = ""
     core_submission: str = ""

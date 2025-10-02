@@ -11,7 +11,7 @@ from tempDataBase import PDFData
 
 UNIT_MAP = {
     "Gramatur/Weight": r"g/m2",
-    "OTR": r"cm3/m2 d",
+    "OTR": r"cm3/m2 d at",
     "WVTR": r"g/m2d",
     "Grub./Thickness": r"μm"
 }
@@ -60,6 +60,7 @@ class RegexDataParser(IDataParser):
 
         # Packing
         data.winding_code = self._extract(text, r"Winding code\s*:\s*([^\n]+?)(?:\n|Core)")
+        data.core = self._extract(text, r"Core\s*:\s*([^\n]+)")
         data.external_diameter = self._extract(text, r"External diameter\s*:\s*([^\n]+?)(?:\n|Core)")
         data.width_of_core = self._extract(text, r"Width of core\s*:\s*([^\n]+)")
         data.core_submission = self._extract(text, r"Core submission\s*:\s*([^\n]+)")
@@ -166,7 +167,7 @@ class PDFtoGUIService:
                 stats['failed'] += 1
 
         print("\n⏳ Finalizacja...")
-        time.sleep(2.0)
+
 
         return stats
 
