@@ -23,16 +23,39 @@ class MainWindowGUIAutomator(IGUIAutomator):
 
         # Najpierw czyścimy formularz (nowa karta)
         self.window._new_karta()
+        artFrame = self.window.artykul_frame
 
         # === ARTYKUŁ ===
-        self.window.artykul_frame.fields["Nr karty"].insert(0, data.card_no)
-        self.window.artykul_frame.fields["Artykuł indeks"].insert(0, data.article_index)
-        self.window.artykul_frame.fields["Artykuł klienta"].insert(0, data.client_article_index)
-        self.window.artykul_frame.fields["Artykuł nazwa"].insert(0, data.article_description)
-        self.window.artykul_frame.fields["Artykuł struktura"].insert(0, data.product_structure)
-        self.window.artykul_frame.fields["Grubość struktury"].insert(0, data.structure_thickness)
-        self.window.artykul_frame.fields["Opis struktury"].insert(0, data.structure_description)
-        self.window.artykul_frame.fields["Skład chemiczny"].insert(0, data.chemical_composition)
+        artFrame.fields["Nr karty"].insert(0, data.card_no)
+        artFrame.fields["Artykuł indeks"].insert(0, data.article_index)
+        artFrame.fields["Artykuł klienta"].insert(0, data.client_article_index)
+        artFrame.fields["Artykuł nazwa"].insert(0, data.article_description)
+
+        # to raczej nie działą
+        #self.window.artykul_frame.fields["Artykuł struktura"].insert(0, data.product_structure)
+        #self.window.artykul_frame.fields["Grubość struktury"].insert(0, data.structure_thickness)
+
+        # === STRUKTURA WARSTW ===
+        # Jeśli PDFData ma warstwy rozbite np. layer1/layer2
+        if hasattr(data, "layer1") and hasattr(data, "layer2"):
+            artFrame.layer1_var.set(data.layer1)
+            artFrame.layer2_var.set(data.layer2)
+        else:
+            # fallback jeśli nie ma warstw w PDFData
+            if data.product_structure:
+                parts = data.product_structure.split('/')
+                artFrame.layer1_var.set(parts[0] if len(parts) > 0 else "OPA")
+                artFrame.layer2_var.set(parts[1] if len(parts) > 1 else "PE")
+
+        artFrame.thickness1_var.set(str(getattr(data, "thickness1", "15")))
+        artFrame.thickness2_var.set(str(getattr(data, "thickness2", "50")))
+
+        # Odśwież pola automatyczne
+        artFrame._update_structure_fields()
+
+        # Wpisanie do tabeli
+        #self.window.artykul_frame.fields["Opis struktury"].insert(0, data.structure_description)
+        #self.window.artykul_frame.fields["Skład chemiczny"].insert(0, data.chemical_composition)
 
         # === WŁAŚCIWOŚCI FIZYKOCHEMICZNE ===
         # Używamy nazw zgodnych z domyślną tabelą i dodajemy nowe jeśli potrzeba
