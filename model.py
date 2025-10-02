@@ -9,6 +9,14 @@ from interface import ITextExtractor, IDataParser, IDataEnricher, IGUIAutomator
 from tempDataBase import PDFData
 
 
+UNIT_MAP = {
+    "Gramatur/Weight": r"g/m2",
+    "OTR": r"cm3/m2 d",
+    "WVTR": r"g/m2d",
+    "Grub./Thickness": r"μm"
+}
+
+
 class PDFTextExtractor(ITextExtractor):
     """Ekstrakcja tekstu z PDF"""
 
@@ -28,30 +36,31 @@ class RegexDataParser(IDataParser):
     def parse(self, text: str) -> PDFData:
         data = PDFData()
 
+
         # General Data
         data.card_no = self._extract(text, r"Card No\s*:\s*([^\n]+)")
         data.article_index = self._extract(text, r"Article index\s*:\s*([^\n]+)")
         data.client_article_index = self._extract(text, r"Client'?s?\s+article index\s*:\s*([^\n]+)")
         data.article_description = self._extract(text, r"Article description\s*:\s*([^\n]+)")
-        data.product_structure = self._extract(text, r"Product structure\s*:\s*([^\n]+)")
+        data.product_structure = self._extract(text, r"Product structure\s*:\s*([^\n]+?)(?:\n|Structure)")
         data.structure_thickness = self._extract(text, r"Structure thickness\s*:\s*([^\n]+)")
         data.structure_description = self._extract(text, r"Structure description\s*:\s*([^\n]+?)(?:\n|Chemical)")
         data.chemical_composition = self._extract(text, r"Chemical composition\s*:\s*([^\n]+)")
 
         # Physico-chemical properties
-        data.gramatura = self._extract_value(text, r"Gramatur/Weight")
-        data.otr = self._extract_value(text, r"OTR")
-        data.wvtr = self._extract_value(text, r"WVTR")
-        data.thickness = self._extract_value(text, r"Grub\./Thickness")
+        data.gramatura = self._extract_value(text, "Gramatur/Weight")
+        data.otr = self._extract_value(text, "OTR")
+        data.wvtr = self._extract_value(text, "WVTR")
+        data.thickness = self._extract_value(text, "Grub./Thickness")
 
         # Print details
         data.print_type = self._extract(text, r"Print type\s*:\s*([^\n]+)")
-        data.number_of_colours = self._extract(text, r"Number of colours\s*:\s*([^\n]+)")
+        data.number_of_colours = self._extract(text, r"Number of colours\s*:\s*([^\n]+?)(?:\n|Solid)")
         data.solid_lacquer = self._extract(text, r"Solid/Lacquer\s*:\s*([^\n]+)")
 
         # Packing
-        data.winding_code = self._extract(text, r"Winding code\s*:\s*([^\n]+)")
-        data.external_diameter = self._extract(text, r"External diameter\s*:\s*([^\n]+)")
+        data.winding_code = self._extract(text, r"Winding code\s*:\s*([^\n]+?)(?:\n|Core)")
+        data.external_diameter = self._extract(text, r"External diameter\s*:\s*([^\n]+?)(?:\n|Core)")
         data.width_of_core = self._extract(text, r"Width of core\s*:\s*([^\n]+)")
         data.core_submission = self._extract(text, r"Core submission\s*:\s*([^\n]+)")
 
@@ -65,9 +74,18 @@ class RegexDataParser(IDataParser):
         return ""
 
     def _extract_value(self, text: str, param_name: str) -> str:
-        pattern = rf"{param_name}.*?(\d+(?:[.,]\d+)?)"
-        match = re.search(pattern, text, re.IGNORECASE | re.DOTALL)
-        return match.group(1).replace(',', '.') if match else ""
+        """
+            Szuka wartości fizykochemicznej po nazwie parametru lub jednostce.
+            Zwraca pierwszą liczbę po dopasowaniu jednostki.
+            """
+        unit_pattern = UNIT_MAP.get(param_name)
+        if not unit_pattern:
+            return None
+
+        match = re.search(rf"{re.escape(unit_pattern)}\s+([\d,]+)", text)
+        if match:
+            return float(match.group(1).replace(",", "."))
+        return None
 
 
 # ============================================================================
