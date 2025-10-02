@@ -33,6 +33,7 @@ def integrateWithGUI(main_window):
 
     def import_from_pdf():
         """Handler dla przycisku Import z PDF"""
+
         # Wybór folderu z PDF-ami
         pdf_folder = filedialog.askdirectory(title="Wybierz folder z plikami PDF")
         if not pdf_folder:
@@ -46,16 +47,16 @@ def integrateWithGUI(main_window):
         # Pytanie o nazwisko
         root = tk.Tk()
         root.withdraw()
-
         dialog = ListaOsobDialog(root, title="Import z PDF")
         prepared_by = dialog.result
+
 
         if prepared_by:
             print("Wybrano:", prepared_by)
         else:
             print("Nie wybrano osoby")
-
-
+            root.destroy()
+            return
 
         # Opcjonalnie: Excel
         excel_path = None
@@ -71,19 +72,46 @@ def integrateWithGUI(main_window):
             if excel_file:
                 excel_path = Path(excel_file)
 
+        root.destroy()
+
         # Tworzenie serwisu i przetwarzanie
+
         service = PDFtoGUIServiceFactory.create(main_window, excel_path)
         stats = service.process_directory(Path(pdf_folder), prepared_by)
 
-        # Podsumowanie
-        tk.messagebox.showinfo(
-            "Import zakończony",
-            f"Przetworzono pliki PDF:\n\n"
-            f"✓ Sukces: {stats['success']}\n"
-            f"✗ Błędy: {stats['failed']}\n\n"
-            f"PDF-y zostały wygenerowane!"
-        )
-        root.destroy()
+
+        print("IMPORT ZAKOŃCZONY")
+        print(f"✓ Sukces: {stats['success']}")
+        print(f"✗ Błędy: {stats['failed']}")
+        print(f"PDF-y zostały wygenerowane!")
+
+        # Stwórz nowe okno na podsumowanie
+
+
+        def summaryBox ():
+
+            summaryRoot = tk.Tk()
+            summaryRoot.withdraw()
+
+            tk.messagebox.showinfo(
+                "Import zakończony",
+                f"Przetworzono pliki PDF:\n\n"
+                f"✓ Sukces: {stats['success']}\n"
+                f"✗ Błędy: {stats['failed']}\n\n"
+                f"PDF-y zostały wygenerowane!"
+            )
+
+            print("okienko")
+
+            summaryRoot.destroy()
+
+        summaryBox()
+        print("==Koniec==")
+        summaryBox()
+        summaryBox()
+
+
+
 
     # Dodaj przycisk "Import z PDF" do GUI
     import_button = tk.Button(

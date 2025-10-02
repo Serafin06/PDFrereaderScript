@@ -1,3 +1,4 @@
+import time
 from pathlib import Path
 from typing import Optional, Dict
 import re, pdfplumber
@@ -139,11 +140,15 @@ class PDFtoGUIService:
 
         stats = {'success': 0, 'failed': 0}
 
+
         for pdf_file in pdf_files:
             if self.process_pdf(pdf_file, prepared_by):
                 stats['success'] += 1
             else:
                 stats['failed'] += 1
+
+        print("\n⏳ Finalizacja...")
+        time.sleep(2.0)
 
         return stats
 

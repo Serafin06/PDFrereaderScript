@@ -1,5 +1,4 @@
 import time
-from pathlib import Path
 
 import pyautogui
 
@@ -17,6 +16,7 @@ class MainWindowGUIAutomator(IGUIAutomator):
             main_window: Instancja MainWindow z Twojego programu
         """
         self.window = main_window
+        self.countPDF = 0
 
     def fill_form(self, data: PDFData) -> None:
         """Wpisuje dane do formularza GUI"""
@@ -131,7 +131,10 @@ class MainWindowGUIAutomator(IGUIAutomator):
         """Generuje PDF klikając przycisk w GUI i automatycznie zatwierdza okna systemowe"""
         self.window._generate_pdf()  # kliknięcie "Generuj PDF"
 
-        time.sleep(0.8)
+        if self.countPDF == 0:
+            time.sleep(3)
+        else:
+            time.sleep(0.8)
 
         pyautogui.press("enter")
 
@@ -142,6 +145,7 @@ class MainWindowGUIAutomator(IGUIAutomator):
         pyautogui.press("enter")
 
         print("  ✓ PDF wygenerowany")
+        self.countPDF += 1
 
 
 
@@ -224,3 +228,14 @@ class MainWindowGUIAutomator(IGUIAutomator):
         except Exception as e:
             print(f"  ⚠ Błąd przy dodawaniu/aktualizacji {property_name}: {e}")
 
+
+
+def waitForWindow(title: str, timeout: int = 10):
+    """Czeka aż pojawi się okno z danym tytułem"""
+    start = time.time()
+    while time.time() - start < timeout:
+        win = pyautogui.getWindowsWithTitle(title)
+        if win:
+            return win[0]
+        time.sleep(0.2)
+    return None

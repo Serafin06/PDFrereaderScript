@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 2.0">
+    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 2.1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/guiAutomator.py" beforeDir="false" afterPath="$PROJECT_DIR$/guiAutomator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/insertToCard.py" beforeDir="false" afterPath="$PROJECT_DIR$/insertToCard.py" afterDir="false" />
@@ -45,20 +45,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.guiAutomator.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/RGrabowski/PycharmProjects/PDFrereaderScript&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.guiAutomator.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/RGrabowski/PycharmProjects/PDFrereaderScript",
+    "settings.editor.selected.configurable": "com.carbonblack.intellij.rpmspec.RpmSpecSettingsConfigurable",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -138,7 +138,15 @@
       <option name="project" value="LOCAL" />
       <updated>1759316017434</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="v. 2.1">
+      <option name="closed" value="true" />
+      <created>1759317296333</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1759317296333</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -150,6 +158,7 @@
     <MESSAGE value="v. 0.5" />
     <MESSAGE value="v. 1.0" />
     <MESSAGE value="v. 2.0" />
-    <option name="LAST_COMMIT_MESSAGE" value="v. 2.0" />
+    <MESSAGE value="v. 2.1" />
+    <option name="LAST_COMMIT_MESSAGE" value="v. 2.1" />
   </component>
 </project>
