@@ -36,7 +36,6 @@ class RegexDataParser(IDataParser):
     def parse(self, text: str) -> PDFData:
         data = PDFData()
 
-
         # General Data
         data.card_no = self._extract(text, r"Card No\s*:\s*([^\n]+)")
         data.article_index = self._extract(text, r"Article index\s*:\s*([^\n]+)")
