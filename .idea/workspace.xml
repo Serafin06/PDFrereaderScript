@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 2.2">
-      <change beforePath="$PROJECT_DIR$/../KartaWyrobu/templates/karta3.html" beforeDir="false" afterPath="$PROJECT_DIR$/../KartaWyrobu/templates/karta3.html" afterDir="false" />
+    <list default="true" id="a12b7238-e34e-4b82-9d68-42143e5e34b5" name="Changes" comment="v. 3.1">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/insertToCard.py" beforeDir="false" afterPath="$PROJECT_DIR$/insertToCard.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -152,7 +153,31 @@
       <option name="project" value="LOCAL" />
       <updated>1759399403601</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="v. 2.4">
+      <option name="closed" value="true" />
+      <created>1759403940212</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1759403940212</updated>
+    </task>
+    <task id="LOCAL-00012" summary="v. 3.0">
+      <option name="closed" value="true" />
+      <created>1759404947863</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1759404947863</updated>
+    </task>
+    <task id="LOCAL-00013" summary="v. 3.1">
+      <option name="closed" value="true" />
+      <created>1759406713615</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1759406713615</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -166,6 +191,9 @@
     <MESSAGE value="v. 2.0" />
     <MESSAGE value="v. 2.1" />
     <MESSAGE value="v. 2.2" />
-    <option name="LAST_COMMIT_MESSAGE" value="v. 2.2" />
+    <MESSAGE value="v. 2.4" />
+    <MESSAGE value="v. 3.0" />
+    <MESSAGE value="v. 3.1" />
+    <option name="LAST_COMMIT_MESSAGE" value="v. 3.1" />
   </component>
 </project>

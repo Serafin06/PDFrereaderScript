@@ -110,7 +110,55 @@ def integrateWithGUI(main_window):
         summaryBox()
         summaryBox()
 
+    def import_single_pdf():
+        """Handler dla przycisku Import pojedynczego PDF - tylko wczytanie danych"""
 
+        # Wybór pliku PDF
+        pdf_file = filedialog.askopenfilename(
+            title="Wybierz plik PDF do zaimportowania",
+            filetypes=[("PDF", "*.pdf")]
+        )
+        if not pdf_file:
+            return
+
+        # Tworzenie serwisu (bez Excel, bez prepared_by)
+        service = PDFtoGUIServiceFactory.create(main_window, excel_path=None)
+
+        try:
+            # Przetwórz pojedynczy PDF
+            text = service.text_extractor.extract_text(Path(pdf_file))
+            data = service.data_parser.parse(text)
+
+            # Wypełnij formularz (BEZ generowania PDF)
+            service.gui_automator.fill_form(data)
+
+            print(f"✓ Dane z {Path(pdf_file).name} zostały wczytane do formularza")
+
+            # Potwierdzenie
+            confirm_root = tk.Tk()
+            confirm_root.withdraw()
+
+            tk.messagebox.showinfo(
+                "Import zakończony",
+                f"Dane z pliku:\n{Path(pdf_file).name}\n\nzostały wczytane do formularza!",
+                parent=confirm_root
+            )
+
+            confirm_root.destroy()
+
+        except Exception as e:
+            print(f"✗ Błąd podczas importu: {e}")
+
+            error_root = tk.Tk()
+            error_root.withdraw()
+
+            tk.messagebox.showerror(
+                "Błąd importu",
+                f"Nie udało się zaimportować danych:\n{e}",
+                parent=error_root
+            )
+
+            error_root.destroy()
 
 
     # Dodaj przycisk "Import z PDF" do GUI
@@ -125,6 +173,20 @@ def integrateWithGUI(main_window):
         pady=10
     )
     import_button.pack(side="left", padx=5)
+
+    # Przycisk Import pojedynczego PDF (NOWY)
+    import_single_button = tk.Button(
+        main_window.root,
+        text="📄 Import PDF (1 plik)",
+        command=import_single_pdf,
+        font=("Arial", 10, "bold"),
+        bg="#2196F3",  # Inny kolor - niebieski
+        fg="white",
+        padx=20,
+        pady=10
+    )
+    import_single_button.pack(side="left", padx=5)
+
 
     print("✓ Dodano funkcję 'Import z PDF' do GUI")
 

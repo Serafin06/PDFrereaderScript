@@ -43,7 +43,16 @@ class RegexDataParser(IDataParser):
         data.client_article_index = self._extract(text, r"Client'?s?\s+article index\s*:\s*([^\n]+)")
         data.article_description = self._extract(text, r"Article description\s*:\s*([^\n]+)")
         data.product_structure = self._extract(text, r"Product structure\s*:\s*([^\n]+?)(?:\n|Structure)")
+
         data.structure_thickness = self._extract(text, r"Structure thickness\s*:\s*([^\n]+)")
+        thickness_match = re.search(r"Structure thickness\s*:\s*(\d+)\s*/\s*(\d+)", text)
+        if thickness_match:
+            data.thickness1 = thickness_match.group(1)  # 12
+            data.thickness2 = thickness_match.group(2)  # 30
+        else:
+            data.thickness1 = "15"
+            data.thickness2 = "50"
+
         data.structure_description = self._extract(text, r"Structure description\s*:\s*([^\n]+?)(?:\n|Chemical)")
         data.chemical_composition = self._extract(text, r"Chemical composition\s*:\s*([^\n]+)")
 
